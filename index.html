@@ -3,54 +3,59 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gradient Descent — Deep RL Training Dashboard</title>
+<title>Gradient Descent — Model Benchmark Suite</title>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div id="header">
   <div class="header-left">
     <span class="logo">⚡ GD</span>
-    <span class="title">Gradient Descent v0.1.0</span>
-    <span class="subtitle">— Deep Reinforcement Learning Explorer</span>
+    <span class="title">Gradient Descent v0.2</span>
+    <span class="subtitle">— Neural Architecture Benchmarking</span>
   </div>
   <div class="header-right">
     <span class="status-dot" id="statusDot"></span>
-    <span id="statusText">TRAINING</span>
+    <span id="statusText">BENCHMARKING</span>
     <span class="sep">|</span>
     <span>PID: <span id="pidDisplay">4201</span></span>
   </div>
 </div>
 
 <div id="main">
-  <!-- Left: Game Canvas -->
-  <div id="map-panel">
+  <!-- Left: Problem Selection -->
+  <div id="problems-panel">
     <div class="panel-title">
-      <span>Loss Landscape — Epoch <span id="epochDisplay">1</span></span>
-      <span class="panel-controls">[ <a href="#" id="restartBtn">RESTART</a> ]</span>
+      <span>Available Benchmarks — Step <span id="stepDisplay">0</span></span>
+      <span class="panel-controls">
+        [ <a href="#" id="restartBtn">RESET</a> ]
+        [ <a href="#" id="milestoneBtn">VALIDATE</a> ]
+      </span>
     </div>
-    <canvas id="gameCanvas" width="640" height="480"></canvas>
-    <div id="legend">
-      <span><span class="dot" style="background:#1a5276"></span> Low Loss</span>
-      <span><span class="dot" style="background:#2ecc71"></span> Medium</span>
-      <span><span class="dot" style="background:#f39c12"></span> High Loss</span>
-      <span><span class="dot" style="background:#e74c3c"></span> Critical</span>
+    <div id="problemCards"></div>
+    <div id="combatResult"></div>
+    <div id="capabilities">
+      <div class="panel-title">Model Capabilities</div>
+      <div id="capGrid"></div>
     </div>
   </div>
 
   <!-- Right: Dashboard -->
   <div id="dashboard">
     <!-- Network Architecture -->
-    <div class="dash-section">
-      <div class="panel-title">Network Architecture</div>
-      <div id="archCanvasWrap">
-        <canvas id="archCanvas" width="340" height="90"></canvas>
+    <div class="dash-section" id="arch-section">
+      <div class="panel-title">
+        <span>Network Architecture <span id="archHint" style="font-weight:normal;color:#484f58;font-size:10px">(drag to reorder)</span></span>
       </div>
-      <div id="layerSlots"></div>
+      <div id="layerList"></div>
+      <div id="archCanvasWrap">
+        <canvas id="archCanvas" width="340" height="60"></canvas>
+      </div>
+      <div id="bonusDisplay"></div>
     </div>
 
     <!-- Loss Curve -->
     <div class="dash-section">
-      <div class="panel-title">Loss Curve <span id="lossValue" class="val">0.500</span></div>
+      <div class="panel-title">Loss Curve <span id="lossValue" class="val">0.150</span></div>
       <canvas id="lossCanvas" width="340" height="80"></canvas>
     </div>
 
@@ -58,10 +63,10 @@
     <div class="dash-section" id="metrics-section">
       <div class="panel-title">Training Metrics</div>
       <div class="metrics-grid">
+        <div class="metric"><label>VRAM</label><span id="vramVal">0/30</span><div class="bar-bg"><div class="bar-fill" id="vramBar" style="width:0%"></div></div></div>
         <div class="metric"><label>Gradient</label><span id="gradientVal">1.00</span><div class="bar-bg"><div class="bar-fill" id="gradientBar" style="width:100%"></div></div></div>
         <div class="metric"><label>Data Samples</label><span id="dataVal">0</span><div class="bar-bg"><div class="bar-fill" id="dataBar" style="width:0%"></div></div></div>
         <div class="metric"><label>Parameters</label><span id="paramsVal">0</span><div class="bar-bg"><div class="bar-fill" id="paramsBar" style="width:0%"></div></div></div>
-        <div class="metric"><label>Accuracy</label><span id="accuracyVal">0%</span><div class="bar-bg"><div class="bar-fill" id="accuracyBar" style="width:0%"></div></div></div>
       </div>
     </div>
 
@@ -74,7 +79,7 @@
 </div>
 
 <div id="footer">
-  <span>WASD/↑↓←→ Move | SPACE Wait | Bump attack enemies | Find &gt; to descend</span>
+  <span>Click a benchmark to forward-pass | SPACE Skip | VALIDATE milestone | <a href="#" id="buyVramBtn" style="color:#58a6ff;text-decoration:none">UPGRADE VRAM</a></span>
 </div>
 
 <script src="js/renderer.js"></script>
